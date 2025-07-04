@@ -1,0 +1,33 @@
+*{
+    font-family: Comic Sans MS;
+}
+
+.center{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+
+#words{
+    display: flex;
+    justify-content: center;
+    width: 510px;
+    flex-wrap: wrap;
+}
+
+#container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.words{
+    width: 150px;
+    height: 100px;
+    display: inline-flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    background-color: #a7a7a7;
+    margin: 10px;
+}
