@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>skribbl randomizer</title>
     <link rel="stylesheet" href="style.css">
     <script src="main.js"></script>
 </head>
 <body>
     <h1 class="center">epic skribbl randomizer</h1>
-    <a class="center"><button onclick="getwords()">randomize</button></a>
+
+    <div id="inputs">
+        <label for="list"> list (each entry separated like this -> thing, thing2, thing3...)</label>
+        <textarea name="list" id="list" cols="20" rows="5" style="resize: none;"></textarea>
+        <label for="amount"> # of words </label>
+        <input type="number" id="amount" name="amount">
+        <button name="button" onclick="getwords()">randomize</button>
+    </div>
     <br>
     <div id="container">
     <div class="center" id="words"></div>

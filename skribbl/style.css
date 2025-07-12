@@ -1,17 +1,26 @@
 *{
     font-family: Comic Sans MS;
+    margin: 0;
+}
+
+body{
+    height: 100vh;
+    background-image: linear-gradient(#2c1142, #150620);
+    background-attachment: fixed;
+    color: rgb(255, 255, 255);
 }
 
 .center{
     display: flex;
     text-align: center;
     justify-content: center;
+    align-items: center;
+    margin-top: 25px;
 }
 
 #words{
     display: flex;
     justify-content: center;
-    width: 510px;
     flex-wrap: wrap;
 }
 
@@ -29,5 +38,24 @@
     justify-content: center;
     align-items: center;
     background-color: #a7a7a7;
+    color: black;
     margin: 10px;
+}
+
+#amount{
+    width: 40px;
+    height: 20px;
+}
+
+#inputs{
+    margin-top: 25px;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#amount, #list{
+    margin-bottom: 25px;
 }
