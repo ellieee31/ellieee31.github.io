@@ -9,7 +9,26 @@ const inprogress = [
     [87425029, '86, 19-83x2, 19-87, 59-100x3']
 ]
 
-const bucketlist = [76196489, 80335620, 93916671, 60284098, 59899374, 68848817, 88244926, 62869408, 71216292, 64658786, 78164953]
+const bucketlist = [
+    90661998, // teehee colon three
+    76196489, // troll level
+    80335620, // reanimate
+    93916671, // shukufuku
+    60284098, // maybe possibly thing
+    59899374, // prismatic haze
+    68848817, // moment
+    68731559, // untitled
+    120617540, // achromatims
+    88244926, // misfire
+    27122654, // artificial ascent
+    37456092, // digital descent
+    62869408, // chromatic haze
+    71216292, // kuzureta
+    66291197, // cybernetic crescent
+    64658786, // wasureta
+    52303420, // requiem
+    78164953 // shutdown
+]
 
 async function fetchData(levelID) {
 
