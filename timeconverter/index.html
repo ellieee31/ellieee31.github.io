@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>time converter</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="main.js"></script>
+</head>
+
+<body>
+    <h1>very cool time converter</h1>
+    Convert from
+    <select id="from">
+        <option value="1">Real Time</option>
+        <option value="72">Minecraft</option>
+        <option value="20">Euro Truck</option>
+        <option value="60">Terraria</option>
+        <option value="stardewvalleylol">Stardew</option>
+    </select>
+    to
+    <select id="to">
+        <option value="1">Real Time</option>
+        <option value="72">Minecraft</option>
+        <option value="20">Euro Truck</option>
+        <option value="60">Terraria</option>
+        <option value="stardewvalleylol">Stardew</option>
+    </select>
+    time
+    <br><br>
+    <input type="text" size="2" id="days"> days
+    <input type="text" size="2" id="hours"> hours
+    <input type="text" size="2" id="minutes"> minutes
+    <input type="text" size="2" id="seconds"> seconds
+    <br><br>
+    <a id="result">converted time goes here</a>
+    <br><br>
+    <button onclick="convert()">convert</button>
+</body>
+
+</html>
