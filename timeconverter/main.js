@@ -7,17 +7,15 @@ function convert() {
         from = 3600 / 43
     }
     else if (to == "stardewvalleylol") {
-        to = 43 / 3600
+        to = 3600 / 43
     }
 
     convertedtime = to / from * time
     result = Math.floor(convertedtime / 86400) + " days, " +
     (Math.floor(convertedtime / 3600) - Math.floor(convertedtime / 86400) * 24) + " hours, " +
     (Math.floor(convertedtime / 60) - Math.floor(convertedtime / 3600) * 60) + " minutes, " +
-    (convertedtime - Math.floor(convertedtime / 60) * 60) + " seconds"
+    (Math.round((convertedtime - Math.floor(convertedtime / 60) * 60)*100)/100) + " seconds"
 
     document.getElementById('result').textContent = result
 
-    console.log(from, to, time)
-    console.log(to / from * time)
 }
