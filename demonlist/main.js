@@ -1,12 +1,13 @@
 const levels = [
     //[id, attempt count, enjoyment, worst death, completion date]
+    [91701349, 13806, 100, 99, "August 8th 2025"],
+    [95764848, 6544, 95, 72, "August 14th 2025"]
 ]
 
 const inprogress = [
     //[id, runs?]
-    [91701349, '66, 54-96, 40-82, 28-71, 19-70'],
-    [95764848, '72, 25-100x2'],
-    [87425029, '86, 19-83x2, 19-87, 59-100x3']
+    [87425029, '86, 19-83x2, 19-87, 59-100x3'],
+    [61079355, '68, 27-86, 46-98x2, 63-100x2']
 ]
 
 const bucketlist = [
@@ -234,5 +235,6 @@ function build(placement, name, creator, att, enjoy, worstfail, compdate, nlw, g
         document.getElementById("right").appendChild(level)
 
     }
+
 
 }
