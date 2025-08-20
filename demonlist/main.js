@@ -1,6 +1,7 @@
 const levels = [
     //[id, attempt count, enjoyment, worst death, completion date]
     [91701349, 13806, 100, 99, "August 8th 2025"],
+    [76196489, 5116, 70, 92, "August 20th 2025"],
     [95764848, 6544, 95, 72, "August 14th 2025"]
 ]
 
@@ -11,15 +12,13 @@ const inprogress = [
 ]
 
 const bucketlist = [
-    90661998, // teehee colon three
-    76196489, // troll level
     80335620, // reanimate
     93916671, // shukufuku
     60284098, // maybe possibly thing
     59899374, // prismatic haze
     68848817, // moment
     68731559, // untitled
-    120617540, // achromatims
+    120617540, // achromatism
     88244926, // misfire
     27122654, // artificial ascent
     37456092, // digital descent
@@ -238,3 +237,4 @@ function build(placement, name, creator, att, enjoy, worstfail, compdate, nlw, g
 
 
 }
+
