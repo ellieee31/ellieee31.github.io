@@ -1,13 +1,13 @@
 const levels = [
     //[id, attempt count, enjoyment, worst death, completion date]
     [91701349, 13806, 100, 99, "August 8th 2025"],
+    [87425029, 14612, 85, 94, "August 23rd 2025"],
     [76196489, 5116, 70, 92, "August 20th 2025"],
     [95764848, 6544, 95, 72, "August 14th 2025"]
 ]
 
 const inprogress = [
     //[id, runs?]
-    [87425029, '86, 19-83x2, 19-87, 59-100x3'],
     [61079355, '68, 27-86, 46-98x2, 63-100x2']
 ]
 
@@ -27,7 +27,8 @@ const bucketlist = [
     66291197, // cybernetic crescent
     64658786, // wasureta
     52303420, // requiem
-    78164953 // shutdown
+    78164953, // shutdown
+    76653933 //storming summit
 ]
 
 async function fetchData(levelID) {
@@ -237,4 +238,5 @@ function build(placement, name, creator, att, enjoy, worstfail, compdate, nlw, g
 
 
 }
+
 
