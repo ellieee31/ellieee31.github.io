@@ -1,37 +1,13 @@
-const levels = [
-    //[id, attempt count, enjoyment, worst death, completion date]
-    [91701349, 13806, 100, 99, "August 8th 2025"],
-    [87425029, 14612, 85, 94, "August 23rd 2025"],
-    [76196489, 5116, 70, 92, "August 20th 2025"],
-    [95764848, 6544, 95, 72, "August 14th 2025"]
-]
+// spreadsheet_id = "1QbdEQf6EbJJJ25ko4LnEoiStcZFyheAZoFozWy_59n4"
+// tabs = ["demonlist", "progress", "bucketlist"]
+// https://opensheet.elk.sh/1QbdEQf6EbJJJ25ko4LnEoiStcZFyheAZoFozWy_59n4/${tabnamehere}?raw=true
 
-const inprogress = [
-    //[id, runs?]
-    [61079355, '68, 27-86, 46-98x2, 63-100x2']
-]
+const levels = [], inprogress = [], bucketlist = []
+let attemptsAll = [], enjoymentAll = [], failAll = [], playtimeAll = [], aredlverifAll = []
+let blocked = []
+let tokimode = false, allExpanded = false
 
-const bucketlist = [
-    80335620, // reanimate
-    93916671, // shukufuku
-    60284098, // maybe possibly thing
-    59899374, // prismatic haze
-    68848817, // moment
-    68731559, // untitled
-    120617540, // achromatism
-    88244926, // misfire
-    27122654, // artificial ascent
-    37456092, // digital descent
-    62869408, // chromatic haze
-    71216292, // kuzureta
-    66291197, // cybernetic crescent
-    64658786, // wasureta
-    52303420, // requiem
-    78164953, // shutdown
-    76653933 //storming summit
-]
-
-async function fetchData(levelID) {
+async function getAredlData(levelID) {
 
     try {
         const response = await fetch("https://api.aredl.net/v2/api/aredl/levels/" + levelID)
@@ -39,27 +15,9 @@ async function fetchData(levelID) {
             throw new Error("Level doesn't exist")
         }
         const data = await response.json()
-
-        //stupid
-        /*
-        if (levelID==91701349){
-            data.name = "suno monsi"
-            data.publisher.global_name = "jan Kote"
-        }
-        if (levelID==95764848){
-            data.name = "telo lon tenpo pini"
-            data.publisher.global_name = "jan Tasi"
-        }
-        if (levelID==87425029){
-            data.name = "kasi mute"
-            data.publisher.global_name = "jan Teno"
-        }
-        */
-
         return {
             name: data.name,
             creator: data.publisher.global_name,
-            gddl_tier: Math.floor(data.gddl_tier),
             nlw_tier: data.nlw_tier,
             aredl_tier: data.position
         }
@@ -71,172 +29,352 @@ async function fetchData(levelID) {
 
 }
 
-async function buildmain(levelID, place) {
-    const levelData = await fetchData(levelID)
-    build(place + 1, levelData.name, levelData.creator, levels[place][1], levels[place][2], levels[place][3], levels[place][4], levelData.nlw_tier, levelData.gddl_tier, levelData.aredl_tier)
-    document.getElementById(levelData.name).style.backgroundImage = "url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/" + levelID + ".webp')"
-    document.getElementById(levelData.name).style.backgroundSize = "cover"
-    document.getElementById(levelData.name).style.backgroundPosition = "center"
-}
+async function collectData(url) {
 
-async function buildleft(levelID, runs) {
-    const levelData = await fetchData(levelID)
-    build(0, levelData.name, levelData.creator, 0, 0, runs, 0, levelData.nlw_tier, levelData.gddl_tier, levelData.aredl_tier)
-    document.getElementById(levelData.name).style.backgroundImage = "url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/" + levelID + ".webp')"
-    document.getElementById(levelData.name).style.backgroundSize = "cover"
-    document.getElementById(levelData.name).style.backgroundPosition = "center"
-}
+    try {
+        const res = await fetch(url)
+        const spreadsheetResults = await res.json()
 
-async function buildright(levelID) {
-    const levelData = await fetchData(levelID)
-    build(0, levelData.name, levelData.creator, 0, 0, 0, 0, levelData.nlw_tier, levelData.gddl_tier, levelData.aredl_tier)
-    document.getElementById(levelData.name).style.backgroundImage = "url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/" + levelID + ".webp')"
-    document.getElementById(levelData.name).style.backgroundSize = "cover"
-    document.getElementById(levelData.name).style.backgroundPosition = "center"
-}
-
-
-
-
-async function order() {
-
-    for (i = 0; i < levels.length; i++) {
-        await buildmain(levels[i][0], i)
+        const aredlPromises = spreadsheetResults.map(function (level) {
+            return getAredlData(level.ID)
+        })
+        const aredlResults = await Promise.all(aredlPromises)
+        for (i = 0; i < spreadsheetResults.length; i++) {
+            spreadsheetData = spreadsheetResults[i]
+            aredlData = aredlResults[i]
+            if (url.includes("demonlist")) {
+                levels.push(
+                    {
+                        name: aredlData.name,
+                        creator: aredlData.creator,
+                        id: spreadsheetData.ID,
+                        rank: spreadsheetData.rank,
+                        aredl: aredlData.aredl_tier,
+                        nlw: aredlData.nlw_tier,
+                        hardest: spreadsheetData.hardest,
+                        attempts: spreadsheetData.attempts,
+                        enjoyment: spreadsheetData.enjoyment,
+                        worstDeath: spreadsheetData.worstDeath,
+                        hardestPart: spreadsheetData.hardestPart,
+                        timeGD: spreadsheetData.timeGD,
+                        timeAREDL: spreadsheetData.timeAREDL,
+                        playtime: spreadsheetData.playtimeTotal,
+                        playtimeSorting: spreadsheetData.playtimeTotal,
+                        date: spreadsheetData.date,
+                        tokiname: spreadsheetData.tpName,
+                        tokicreator: spreadsheetData.tpCreator,
+                        changelog: spreadsheetData.changelog
+                    }
+                )
+                time = levels[i].playtimeSorting * 86400
+                levels[i].playtime = playtimeCalc(levels[i].playtime)
+                sheetsDate = new Date(Date.UTC(1899, 11, 30, 0, 0, 0, 0))
+                levels[i].date = new Date((levels[i].date - 25569) * 86400000).toLocaleDateString("en-US", { year: 'numeric', month: '2-digit', day: '2-digit' })
+            }
+            else if (url.includes("progress")) {
+                inprogress.push(
+                    {
+                        name: aredlData.name,
+                        creator: aredlData.creator,
+                        id: spreadsheetData.ID,
+                        aredl: aredlData.aredl_tier,
+                        nlw: aredlData.nlw_tier,
+                        runs: spreadsheetData.runs,
+                        estimatedRank: spreadsheetData.estimatedRank,
+                        tokiname: spreadsheetData.tpName,
+                        tokicreator: spreadsheetData.tpCreator
+                    }
+                )
+            }
+            else if (url.includes("bucketlist")) {
+                bucketlist.push(
+                    {
+                        name: aredlData.name,
+                        creator: aredlData.creator,
+                        id: spreadsheetData.ID,
+                        aredl: aredlData.aredl_tier,
+                        nlw: aredlData.nlw_tier,
+                        tokiname: spreadsheetData.tpName,
+                        tokicreator: spreadsheetData.tpCreator
+                    }
+                )
+            }
+        }
     }
-    for (i = 0; i < inprogress.length; i++) {
-        await buildleft(inprogress[i][0], inprogress[i][1])
+
+    catch (error) {
+        console.error(error)
     }
-    for (i = 0; i < bucketlist.length; i++) {
-        await buildright(bucketlist[i])
-    }
+
 }
 
-function build(placement, name, creator, att, enjoy, worstfail, compdate, nlw, gddl, aredl) {
+async function buildMain(timeMachine) {
+    document.getElementById("loader").style.display = "flex"
+    document.getElementById("container").style.display = "none"
+    let html = ""
+    if (levels.length == 0) await collectData(`https://opensheet.elk.sh/1QbdEQf6EbJJJ25ko4LnEoiStcZFyheAZoFozWy_59n4/demonlist?raw=true`)
+    attemptsAll = levels.map(a => a.attempts)
+    enjoymentAll = levels.map(a => a.enjoyment)
+    failAll = levels.map(a => a.worstDeath)
+    playtimeAll = levels.map(a => a.playtimeSorting)
+    aredlverifAll = levels.map(a => a.timeAREDL)
 
-    const level = document.createElement("div")
-    level.setAttribute("class", "level")
-    level.setAttribute("id", name)
+    if (typeof (timeMachine) !== "undefined") {
+        levels.forEach(level => {
+            if (new Date(level.date) > new Date(timeMachine)) {
+                blocked.push(level.name)
+            }
+        })
+    }
+    console.log(levels)
 
-    const bgwrap = document.createElement("div")
-    bgwrap.setAttribute("class", "bgwrap")
-    level.append(bgwrap)
-
-    if (att) {
-
-        const infowrap = document.createElement("div")
-        infowrap.setAttribute("class", "infowrap")
-        bgwrap.append(infowrap)
-
-        const imagewrap = document.createElement("div")
-        imagewrap.setAttribute("class", "imagewrap")
-        infowrap.append(imagewrap)
-
-        const image = document.createElement("img")
-        if (aredl == 1) {
-            image.setAttribute("src", "demons/grandpa.png")
+    levels.forEach(level => {
+        if (level.hardest == 1) {
+            level.hardest = "⭐"
         }
-        else if (aredl <= 25 && aredl > 1) {
-            image.setAttribute("src", "demons/infinite.png")
+        if (level.hardest == 0) {
+            level.hardest = ""
         }
-        else if (aredl <= 75 && aredl > 25) {
-            image.setAttribute("src", "demons/mythical.png")
+        html += `<div class="level" id="${level.name}">
+                <div class="rank">`
+        if (level.aredl == 1) {
+            html += `<img class="difficulty" src="demons/grandpa.png" alt="grandpa">`
         }
-        else if (aredl <= 150 && aredl > 75) {
-            image.setAttribute("src", "demons/legendary.png")
+        else if (level.aredl <= 25) {
+            html += `<img class="difficulty" src="demons/infinite.png" alt="infinite">`
         }
-        else if (aredl <= 250 && aredl > 150) {
-            image.setAttribute("src", "demons/ultimate.png")
+        else if (level.aredl <= 75) {
+            html += `<img class="difficulty" src="demons/mythical.png" alt="mythical">`
         }
-        else if (aredl <= 500 && aredl > 250) {
-            image.setAttribute("src", "demons/supreme.png")
+        else if (level.aredl <= 150) {
+            html += `<img class="difficulty" src="demons/legendary.png" alt="legendary">`
+        }
+        else if (level.aredl <= 250) {
+            html += `<img class="difficulty" src="demons/ultimate.png" alt="ultimate">`
+        }
+        else if (level.aredl <= 500) {
+            html += `<img class="difficulty" src="demons/supreme.png" alt="supreme">`
         }
         else {
-            image.setAttribute("src", "demons/extreme.png")
+            html += `<img class="difficulty" src="demons/extreme.png" alt="extreme">`
         }
-        imagewrap.append(image)
+        html += `<h3 class="placement">#${level.rank}</h3>
+                    <a class="aredl">AREDL #${level.aredl}</a>
+                    <a class="nlw">${level.nlw} Tier</a>
+                </div>
+                <div class="info">
+                    <div class="levelinfo">`
+        if (tokimode) {
+            html += `<h3 class="levelname toki">${level.tokiname} tan jan ${level.tokicreator}${level.hardest}</h3>`
+        }
+        else {
+            html += `<h3 class="levelname">${level.name} by ${level.creator} ${level.hardest}</h3>`
+        }
+        html += `</div>
+                    <div class="stats">
+                        <div class="generalstats">
+                            <div>Attempts: ${level.attempts}</div>
+                            <div>Enjoyment: ${level.enjoyment}/100</div>
+                            <div>Worst Death: ${level.worstDeath}%</div>
+                            <div>Hardest Part: ${level.hardestPart}%</div>
+                        </div>
+                        <div class="timestats">
+                            <div class="playtime">Level Playtime: ${level.playtime}</div>
+                            <div class="gdtime">Total GD Playtime: ${level.timeGD}h</div>
+                            <div class="aredltime">AREDL Verification Time: ${level.timeAREDL} days</div>
+                            <div class="date">Completion Date: ${level.date}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>`
+        document.getElementById("mainlist").innerHTML = html;
+    })
+    await buildOther()
+    thumbnails()
+    buildMinor()
+    document.querySelectorAll(".level").forEach(level => {
+        level.addEventListener("click", function () {
+            if (this.classList.contains("active")) {
+                this.classList.remove("active");
+            }
+            else {
+                document.querySelectorAll(".level").forEach(activeLevel => activeLevel.classList.remove("active"));
+                this.classList.add("active");
+            }
+        });
 
-        const difficulties = document.createElement("div")
-        difficulties.setAttribute("class", "difficulties")
-        infowrap.append(difficulties)
-
-        const difficultiestext = document.createElement("a")
-        difficultiestext.innerText = "#" + aredl
-        difficulties.append(difficultiestext)
-
-        const br = document.createElement("br")
-        difficulties.append(br)
-
-        const difficultiestext2 = document.createElement("a")
-        difficultiestext2.innerText = nlw + " | " + gddl
-        //id put a check if its listworthy so that it doesnt display null on list demons but im not beating one anyway so im just not doing that loll
-        difficultiestext2.setAttribute("class", "diffsmall")
-        difficulties.append(difficultiestext2)
-
-        const textwrap = document.createElement("div")
-        textwrap.setAttribute("class", "textwrap")
-        bgwrap.append(textwrap)
-
-        const levelinfo = document.createElement("h2")
-        levelinfo.innerText = "#" + placement + " - " + name + " by " + creator
-        textwrap.append(levelinfo)
-
-        const attempts = document.createElement("p")
-        attempts.innerText = "Attempts: " + att
-        textwrap.append(attempts)
-
-        const enjoyment = document.createElement("p")
-        enjoyment.innerText = "Enjoyment: " + enjoy + "/100"
-        textwrap.append(enjoyment)
-
-        const fail = document.createElement("p")
-        fail.innerText = "Worst Death: " + worstfail + "%"
-        textwrap.append(fail)
-
-        const date = document.createElement("div")
-        date.setAttribute("class", "date")
-        textwrap.append(date)
-
-        const completiondate = document.createElement("p")
-        completiondate.innerText = compdate
-        date.append(completiondate)
-
-        document.getElementById("main").appendChild(level)
-    }
-
-    else if (worstfail) {
-
-        const textwrap = document.createElement("div")
-        textwrap.setAttribute("class", "textwrap")
-        bgwrap.append(textwrap)
-
-        const levelinfo = document.createElement("h2")
-        levelinfo.innerText = "#" + aredl + " | " + name + " by " + creator
-        textwrap.append(levelinfo)
-
-        const fail = document.createElement("p")
-        fail.setAttribute("class", "runs")
-        fail.innerText = "Best Runs: " + worstfail
-        textwrap.append(fail)
-
-        document.getElementById("left").appendChild(level)
-
-    }
-
-    else {
-
-        const textwrap = document.createElement("div")
-        textwrap.setAttribute("class", "textwrap")
-        bgwrap.append(textwrap)
-
-        const levelinfo = document.createElement("h2")
-        levelinfo.innerText = "#" + aredl + " | " + name + " by " + creator
-        textwrap.append(levelinfo)
-
-        document.getElementById("right").appendChild(level)
-
-    }
-
-
+    })
+    blocked.forEach(blockedLevel => {
+        document.getElementById(blockedLevel).style.display = "none"
+    })
+    document.getElementById("container").style.display = "flex"
+    document.getElementById("loader").style.display = "none"
+    expandAll()
 }
 
+function playtimeCalc(time) {
+    time = time * 86400
+    time = Math.floor(time / 3600).toString().padStart(2, '0') + ":" + Math.floor((time % 3600) / 60).toString().padStart(2, '0') + ":" + (time % 60).toString().padStart(2, '0')
+    return time
+}
 
+function thumbnails() {
+    levels.forEach(level => {
+        document.getElementById(level.name).style.backgroundImage = "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/" + level.id + ".webp')"
+    });
+    inprogress.forEach(level => {
+        document.getElementById(level.name).style.backgroundImage = "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/" + level.id + ".webp')"
+    });
+    bucketlist.forEach(level => {
+        document.getElementById(level.name).style.backgroundImage = "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/" + level.id + ".webp')"
+    });
+}
+
+function buildMinor() {
+    document.getElementById("totalstats").innerHTML =
+        `
+                <a>extreme demons: ${levels.length}</a>
+                <a>total attempts: ${attemptsAll.reduce((total, a) => total + a, 0)} attempts</a>
+                <a>total playtime: ${playtimeCalc(playtimeAll.reduce((total, a) => total + a, 0))}</a>
+
+                <a>average attempts: ${(attemptsAll.reduce((total, a) => total + a, 0)) / levels.length} attempts</a>
+                <a>average enjoyment: ${(enjoymentAll.reduce((total, a) => total + a, 0)) / levels.length}/100</a>
+                <a>average worst fail: ${(failAll.reduce((total, a) => total + a, 0)) / levels.length}%</a>
+                <a>average playtime: ${playtimeCalc((playtimeAll.reduce((total, a) => total + a, 0)) / levels.length)}</a>
+                <a>average aredl verification time: ${(aredlverifAll.reduce((total, a) => total + a, 0)) / levels.length} days</a>
+
+                <a>least attempts: ${Math.min(...attemptsAll)} attempts</a>
+                <a>highest enjoyment: ${Math.max(...enjoymentAll)}/100</a>
+                <a>lowest worst fail: ${Math.min(...failAll)}%</a>
+                <a>lowest playtime: ${playtimeCalc(Math.min(...playtimeAll))}</a>
+                <a>lowest aredl verification time: ${Math.min(...aredlverifAll)} days</a>
+
+                <a>most attempts: ${Math.max(...attemptsAll)} attempts</a>
+                <a>lowest enjoyment: ${Math.min(...enjoymentAll)}/100</a>
+                <a>highest worst fail: ${Math.max(...failAll)}%</a>
+                <a>highest playtime: ${playtimeCalc(Math.max(...playtimeAll))}</a>
+                <a>highest aredl verification time: ${Math.max(...aredlverifAll)} days</a>
+`
+    html = ""
+    levels.sort((a, b) => (a.date < b.date) ? 1 : -1);
+    levels.forEach(level => {
+        html += "<a>" + level.date + " - " + level.changelog + "</a><br>"
+    })
+    document.getElementById("changelog").innerHTML = html
+    levels.sort((a, b) => (a.rank > b.rank) ? 1 : -1);
+}
+
+async function buildOther() {
+    if (inprogress.length == 0) await collectData(`https://opensheet.elk.sh/1QbdEQf6EbJJJ25ko4LnEoiStcZFyheAZoFozWy_59n4/progress?raw=true`)
+    if (bucketlist.length == 0) await collectData(`https://opensheet.elk.sh/1QbdEQf6EbJJJ25ko4LnEoiStcZFyheAZoFozWy_59n4/bucketlist?raw=true`)
+    bucketlist.sort((a, b) => a.aredl < b.aredl ? 1 : -1)
+    let html = ""
+    inprogress.forEach(level => {
+        html += `<div class="level" id="${level.name}">
+                    <div class="otherinfo">`
+        if (tokimode) {
+            html += `
+                <a class="aredl tokiaredl">#${level.aredl} -&nbsp;</a>
+                <a class="levelname toki">${level.tokiname} tan jan ${level.tokicreator}</a>`
+        }
+        else {
+            html += `
+             <a class="aredl">#${level.aredl} -&nbsp;</a>
+             <a class="levelname">${level.name} by ${level.creator}</a>`
+        }
+        html += `</div>
+        <div class="otherruns">Runs: ${level.runs}</div>
+        </div>
+        `
+    })
+    document.getElementById("inprogress").innerHTML = html
+    html = ""
+    bucketlist.forEach(level => {
+        html += `<div class="level" id="${level.name}">
+                    <div class="otherinfo">`
+        if (tokimode) {
+            html += `
+             <a class="aredl tokiaredl">#${level.aredl} -&nbsp;</a>
+             <a class="levelname toki">${level.tokiname} tan jan ${level.tokicreator}</a>`
+        }
+        else {
+            html += `
+             <a class="aredl">#${level.aredl} -&nbsp;</a>
+             <a class="levelname">${level.name} by ${level.creator}</a>`
+        }
+        html += `</div></div>`
+    })
+    document.getElementById("bucketlist").innerHTML = html
+}
+
+document.getElementById("toki").addEventListener("click", function () {
+    tokimode = !tokimode
+    buildMain();
+});
+
+document.getElementById("sortingoptions").addEventListener("click", function () {
+    if (document.getElementById("sorting").style.display == "flex") {
+        document.getElementById("sorting").style.display = "none"
+    }
+    else {
+        document.getElementById("sorting").style.display = "flex"
+        document.getElementById("timemachine").style.display = "none"
+    }
+})
+
+document.getElementById("time").addEventListener("click", function () {
+    if (document.getElementById("timemachine").style.display == "flex") {
+        document.getElementById("timemachine").style.display = "none"
+    }
+    else {
+        document.getElementById("timemachine").style.display = "flex"
+        document.getElementById("sorting").style.display = "none"
+    }
+})
+
+document.getElementById("sort").addEventListener("click", function () {
+    condition = document.getElementById("sortType").value;
+    direction = document.getElementById("sortMode").value;
+    if (direction == "asc") {
+        levels.sort((a, b) => (a[condition] > b[condition]) ? 1 : -1);
+    }
+    else {
+        levels.sort((a, b) => (a[condition] < b[condition]) ? 1 : -1);
+    }
+    buildMain();
+})
+
+document.getElementById("timetravel").addEventListener("click", function () {
+    console.log(document.getElementById("timemachinedate").value)
+    buildMain(new Date(document.getElementById("timemachinedate").value.toString()))
+})
+
+document.getElementById("resettime").addEventListener("click", function () {
+    blocked = []
+    buildMain()
+})
+
+document.getElementById("resetsort").addEventListener("click", function () {
+    levels.sort((a, b) => (a.rank > b.rank) ? 1 : -1);
+    buildMain()
+})
+
+document.getElementById("listexpand").addEventListener("click", function () {
+    allExpanded = !allExpanded
+    expandAll()
+})
+
+function expandAll() {
+    if (allExpanded == true) {
+        document.querySelectorAll("#mainlist .level").forEach(level => {
+            level.classList.add("active");
+        });
+        document.getElementById("listexpand").textContent = "collapse all"
+    }
+    else{
+        document.querySelectorAll("#mainlist .level").forEach(level => {
+            level.classList.remove("active");
+        });
+        document.getElementById("listexpand").textContent = "expand all"
+    }
+}

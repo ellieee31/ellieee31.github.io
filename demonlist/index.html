@@ -4,28 +4,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>my demon list</title>
-    <link rel="stylesheet" href="style.css">
+    <title>ellie's demonlist</title>
     <script src="main.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="images/cubeicon.svg">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="ellie's demonlist">
+    <meta property="og:description"
+        content="the website for ellie's hardest gd achievements, containing a demonlist, extreme demon statistics, and more!">
+    <meta name="theme-color" content="#ffa0dc">
 </head>
 
-<body onload="order()">
-    
+<body onload="buildMain()">
+    <div id="loader">
+        <img src="images/cube.svg" alt="spinningcube">
+        <h1>Loading...</h1>
+    </div>
     <div id="container">
-    <div id="left">
-    <h1>levels im working on</h1>
-    </div>
-    <div id="main">
-    <h1>the list</h1>
-    </div>
-    <div id="right">
-    <h1>levels i wanna beat</h1>
-    </div>
+        <header>
+            <img src="images/cube.svg" id="cube" alt="cube">
+            <h1>ellie's demonlist</h1>
+            <img src="images/cube.svg" id="cube" alt="cube">
+        </header>
+        <nav>
+            <button disabled>pemonlist</button>
+            <button id="sortingoptions">sorting options</button>
+            <button id="listexpand">expand all</button>
+            <button id="time">time machine</button>
+            <button id="toki">toggle toki pona mode</button>
+        </nav>
+        <div id="sorting" class="navoptions">
+            <a>Sort by:</a>
+            <select id="sortType">
+                <option value="rank" selected>Rank</option>
+                <option value="aredl">AREDL Placement</option>
+                <option value="enjoyment">Enjoyment</option>
+                <option value="attempts">Attempts</option>
+                <option value="worstDeath">Worst Death</option>
+                <option value="playtimeSorting">Time Spent</option>
+                <option value="date">Completion Date</option>
+                <option value="timeAREDL">AREDL Verification Time</option>
+            </select>
+            <select id="sortMode">
+                <option value="asc" selected>ascending</option>
+                <option value="desc">descending</option>
+            </select>
+            <button id="sort">Confirm</button>
+            <button id="resetsort">Reset</button>
+        </div>
+        <div id="timemachine" class="navoptions">
+            <a>Go back to:</a>
+            <input type="date" id="timemachinedate" min="2025-08-08">
+            <button id="timetravel">Confirm</button>
+            <button id="resettime">Reset</button>
+        </div>
+        <main id="lists">
+            <div id="minor">
+                <img src="images/cube.svg" id="cube" alt="cube">
+                <h1>Extreme Demon Stats</h1>
+                <div id="totalstats"></div>
+                <h1>Changelog</h1>
+                <div id="changelog"></div>
+            </div>
 
-    </div>
+            <div id="mainlist"></div>
 
-    <div id="footer">
-        Made using&nbsp;<a href="https://api.aredl.net/v2/docs" target="_blank">AREDL API</a>, demon faces from&nbsp;<a href="https://github.com/ItzKiba/GrandpaDemon/tree/main" target="_blank">Grandpa Demon</a>
+            <div id="other">
+                <h3>In Progress</h3>
+                <div id="inprogress"></div>
+                <h3>Bucket List</h3>
+                <div id="bucketlist"></div>
+        </main>
+
     </div>
 </body>
 
