@@ -372,6 +372,53 @@ nav button:disabled {
     }
 }
 
+
+@media (max-width: 450px) {
+
+    html{
+        font-size: 8px;
+    }
+
+    nav{
+        width: 100%;
+    }
+
+    nav button{
+        width: 20%;
+        font-size: 1rem;
+    }
+
+    #mainlist .level {
+        margin: .5rem;
+        width: 90%;
+    }
+
+    .rank a {
+        width: 5rem;
+    }
+
+    #totalstats,
+    #other {
+        font-size: 1.5rem;
+    }
+
+    #other .level {
+        width: 30rem;
+        height: 3rem;
+    }
+
+    #inprogress .level.active {
+        height: 4.5rem;
+    }
+
+    #changelog{
+        width: 90%;
+    }
+}
+
+
+
+
 #loader {
     width: 100vw;
     height: 100vh;
@@ -408,3 +455,4 @@ nav button:disabled {
     margin-bottom: .5rem;
 
 }
+
