@@ -2,7 +2,7 @@
 // tabs = ["demonlist", "progress", "bucketlist"]
 // https://opensheet.elk.sh/1QbdEQf6EbJJJ25ko4LnEoiStcZFyheAZoFozWy_59n4/${tabnamehere}?raw=true
 
-const levels = [], inprogress = [], bucketlist = []
+const levels = [], inprogress = [], upcoming = [], bucketlist = []
 let attemptsAll = [], enjoymentAll = [], failAll = [], playtimeAll = [], aredlverifAll = []
 let blocked = []
 let tokimode = false, allExpanded = false
@@ -81,6 +81,20 @@ async function collectData(url) {
                         nlw: aredlData.nlw_tier,
                         runs: spreadsheetData.runs,
                         estimatedRank: spreadsheetData.estimatedRank,
+                        tokiname: spreadsheetData.tpName,
+                        tokicreator: spreadsheetData.tpCreator
+                    }
+                )
+            }
+            else if (url.includes("upcoming")) {
+                upcoming.push(
+                    {
+                        name: aredlData.name,
+                        creator: aredlData.creator,
+                        id: spreadsheetData.ID,
+                        aredl: aredlData.aredl_tier,
+                        nlw: aredlData.nlw_tier,
+                        time: spreadsheetData.time,
                         tokiname: spreadsheetData.tpName,
                         tokicreator: spreadsheetData.tpCreator
                     }
@@ -195,12 +209,14 @@ async function buildMain(timeMachine) {
     document.querySelectorAll(".level").forEach(level => {
         level.addEventListener("click", function () {
             if (this.classList.contains("active")) {
-                this.classList.remove("active");
+                document.querySelectorAll(".level").forEach(activeLevel => activeLevel.classList.remove("active"));
             }
             else {
                 document.querySelectorAll(".level").forEach(activeLevel => activeLevel.classList.remove("active"));
                 this.classList.add("active");
             }
+            document.getElementById("listexpand").textContent = "expand all"
+                allExpanded = false
         });
 
     })
@@ -223,6 +239,9 @@ function thumbnails() {
         document.getElementById(level.name).style.backgroundImage = "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/" + level.id + ".webp')"
     });
     inprogress.forEach(level => {
+        document.getElementById(level.name).style.backgroundImage = "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/" + level.id + ".webp')"
+    });
+    upcoming.forEach(level => {
         document.getElementById(level.name).style.backgroundImage = "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/" + level.id + ".webp')"
     });
     bucketlist.forEach(level => {
@@ -266,6 +285,7 @@ function buildMinor() {
 
 async function buildOther() {
     if (inprogress.length == 0) await collectData(`https://opensheet.elk.sh/1QbdEQf6EbJJJ25ko4LnEoiStcZFyheAZoFozWy_59n4/progress?raw=true`)
+    if (upcoming.length == 0) await collectData(`https://opensheet.elk.sh/1QbdEQf6EbJJJ25ko4LnEoiStcZFyheAZoFozWy_59n4/upcoming?raw=true`)
     if (bucketlist.length == 0) await collectData(`https://opensheet.elk.sh/1QbdEQf6EbJJJ25ko4LnEoiStcZFyheAZoFozWy_59n4/bucketlist?raw=true`)
     bucketlist.sort((a, b) => a.aredl < b.aredl ? 1 : -1)
     let html = ""
@@ -288,6 +308,28 @@ async function buildOther() {
         `
     })
     document.getElementById("inprogress").innerHTML = html
+    html = ""
+    storedDate = ""
+    upcoming.forEach(level => {
+        if(level.time != storedDate){
+        html += `<h4>${level.time}</h4>`
+        }
+        storedDate = level.time
+        html += `<div class="level" id="${level.name}">
+                    <div class="otherinfo">`
+        if (tokimode) {
+            html += `
+             <a class="aredl tokiaredl">#${level.aredl} -&nbsp;</a>
+             <a class="levelname toki">${level.tokiname} tan jan ${level.tokicreator}</a>`
+        }
+        else {
+            html += `
+             <a class="aredl">#${level.aredl} -&nbsp;</a>
+             <a class="levelname">${level.name} by ${level.creator}</a>`
+        }
+        html += `</div></div>`
+    })
+    document.getElementById("upcoming").innerHTML = html
     html = ""
     bucketlist.forEach(level => {
         html += `<div class="level" id="${level.name}">
