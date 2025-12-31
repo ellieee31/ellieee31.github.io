@@ -3,7 +3,7 @@
 // https://opensheet.elk.sh/1QbdEQf6EbJJJ25ko4LnEoiStcZFyheAZoFozWy_59n4/${tabnamehere}?raw=true
 
 const levels = [], inprogress = [], upcoming = [], bucketlist = []
-let attemptsAll = [], enjoymentAll = [], failAll = [], playtimeAll = [], aredlverifAll = []
+let attemptsAll = [], enjoymentAll = [], failAll = [], playtimeAll = [], aredlverifAll = [], bpmAll = []
 let blocked = []
 let tokimode = false, allExpanded = false
 
@@ -54,6 +54,7 @@ async function collectData(url) {
                         hardest: spreadsheetData.hardest,
                         attempts: spreadsheetData.attempts,
                         enjoyment: spreadsheetData.enjoyment,
+                        bpm: spreadsheetData.bpm,
                         worstDeath: spreadsheetData.worstDeath,
                         hardestPart: spreadsheetData.hardestPart,
                         timeGD: spreadsheetData.timeGD,
@@ -125,13 +126,18 @@ async function collectData(url) {
 async function buildMain(timeMachine) {
     document.getElementById("loader").style.display = "flex"
     document.getElementById("container").style.display = "none"
-    let html = ""
+    let html = "<a id='hardestinfo'>👑 - current hardest | ⭐ - former hardest</a>"
     if (levels.length == 0) await collectData(`https://opensheet.elk.sh/1QbdEQf6EbJJJ25ko4LnEoiStcZFyheAZoFozWy_59n4/demonlist?raw=true`)
     attemptsAll = levels.map(a => a.attempts)
     enjoymentAll = levels.map(a => a.enjoyment)
     failAll = levels.map(a => a.worstDeath)
     playtimeAll = levels.map(a => a.playtimeSorting)
     aredlverifAll = levels.map(a => a.timeAREDL)
+    bpmAll = levels.map(a => a.bpm)
+
+    playtimeAll = playtimeAll.filter(el => el != "-")
+    aredlverifAll = aredlverifAll.filter(el => el != "-")
+    bpmAll = bpmAll.filter(el => el != "-")
 
     if (typeof (timeMachine) !== "undefined") {
         levels.forEach(level => {
@@ -140,11 +146,13 @@ async function buildMain(timeMachine) {
             }
         })
     }
-    console.log(levels)
 
     levels.forEach(level => {
         if (level.hardest == 1) {
             level.hardest = "⭐"
+        }
+        if(level.rank == 1){
+            level.hardest = "👑"
         }
         if (level.hardest == 0) {
             level.hardest = ""
@@ -189,6 +197,7 @@ async function buildMain(timeMachine) {
                         <div class="generalstats">
                             <div>Attempts: ${level.attempts}</div>
                             <div>Enjoyment: ${level.enjoyment}/100</div>
+                            <div>Max BPM: ${level.bpm} BPM</div>
                             <div>Worst Death: ${level.worstDeath}%</div>
                             <div>Hardest Part: ${level.hardestPart}%</div>
                         </div>
@@ -256,20 +265,23 @@ function buildMinor() {
                 <a>total attempts: ${attemptsAll.reduce((total, a) => total + a, 0)} attempts</a>
                 <a>total playtime: ${playtimeCalc(playtimeAll.reduce((total, a) => total + a, 0))}</a>
 
-                <a>average attempts: ${(attemptsAll.reduce((total, a) => total + a, 0)) / levels.length} attempts</a>
-                <a>average enjoyment: ${(enjoymentAll.reduce((total, a) => total + a, 0)) / levels.length}/100</a>
-                <a>average worst fail: ${(failAll.reduce((total, a) => total + a, 0)) / levels.length}%</a>
-                <a>average playtime: ${playtimeCalc((playtimeAll.reduce((total, a) => total + a, 0)) / levels.length)}</a>
-                <a>average aredl verification time: ${(aredlverifAll.reduce((total, a) => total + a, 0)) / levels.length} days</a>
+                <a>average attempts: ${(attemptsAll.reduce((total, a) => total + a, 0)) / attemptsAll.length} attempts</a>
+                <a>average enjoyment: ${(enjoymentAll.reduce((total, a) => total + a, 0)) / enjoymentAll.length}/100</a>
+                <a>average max bpm: ${(bpmAll.reduce((total, a) => total + a, 0)) / bpmAll.length} BPM</a>
+                <a>average worst fail: ${(failAll.reduce((total, a) => total + a, 0)) / failAll.length}%</a>
+                <a>average playtime: ${playtimeCalc((playtimeAll.reduce((total, a) => total + a, 0)) / playtimeAll.length)}</a>
+                <a>average aredl verification time: ${(aredlverifAll.reduce((total, a) => total + a, 0)) / aredlverifAll.length} days</a>
 
                 <a>least attempts: ${Math.min(...attemptsAll)} attempts</a>
                 <a>highest enjoyment: ${Math.max(...enjoymentAll)}/100</a>
+                <a>lowest max bpm: ${Math.min(...bpmAll)} BPM</a>
                 <a>lowest worst fail: ${Math.min(...failAll)}%</a>
                 <a>lowest playtime: ${playtimeCalc(Math.min(...playtimeAll))}</a>
                 <a>lowest aredl verification time: ${Math.min(...aredlverifAll)} days</a>
 
                 <a>most attempts: ${Math.max(...attemptsAll)} attempts</a>
                 <a>lowest enjoyment: ${Math.min(...enjoymentAll)}/100</a>
+                <a>highest max bpm: ${Math.max(...bpmAll)} BPM</a>
                 <a>highest worst fail: ${Math.max(...failAll)}%</a>
                 <a>highest playtime: ${playtimeCalc(Math.max(...playtimeAll))}</a>
                 <a>highest aredl verification time: ${Math.max(...aredlverifAll)} days</a>
@@ -387,7 +399,6 @@ document.getElementById("sort").addEventListener("click", function () {
 })
 
 document.getElementById("timetravel").addEventListener("click", function () {
-    console.log(document.getElementById("timemachinedate").value)
     buildMain(new Date(document.getElementById("timemachinedate").value.toString()))
 })
 
