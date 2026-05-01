@@ -70,7 +70,7 @@ async function collectData(url) {
                 time = levels[i].playtimeSorting * 86400
                 levels[i].playtime = playtimeCalc(levels[i].playtime)
                 sheetsDate = new Date(Date.UTC(1899, 11, 30, 0, 0, 0, 0))
-                levels[i].date = new Date((levels[i].date - 25569) * 86400000).toLocaleDateString("en-US", { year: 'numeric', month: '2-digit', day: '2-digit' })
+                levels[i].date = new Date((levels[i].date - 25569) * 86400000)
             }
             else if (url.includes("progress")) {
                 inprogress.push(
@@ -121,6 +121,10 @@ async function collectData(url) {
         console.error(error)
     }
 
+}
+
+function dateShort(x){
+    return x.toLocaleDateString("en-US", { year: 'numeric', month: '2-digit', day: '2-digit' })
 }
 
 async function buildMain(timeMachine) {
@@ -205,7 +209,7 @@ async function buildMain(timeMachine) {
                             <div class="playtime">Level Playtime: ${level.playtime}</div>
                             <div class="gdtime">Total GD Playtime: ${level.timeGD}h</div>
                             <div class="aredltime">AREDL Verification Time: ${level.timeAREDL} days</div>
-                            <div class="date">Completion Date: ${level.date}</div>
+                            <div class="date">Completion Date: ${dateShort(level.date)}</div>
                         </div>
                     </div>
                 </div>
@@ -289,7 +293,7 @@ function buildMinor() {
     html = ""
     levels.sort((a, b) => (a.date < b.date) ? 1 : -1);
     levels.forEach(level => {
-        html += "<a>" + level.date + " - " + level.changelog + "</a><br>"
+        html += "<a>" + dateShort(level.date) + " - " + level.changelog + "</a><br>"
     })
     document.getElementById("changelog").innerHTML = html
     levels.sort((a, b) => (a.rank > b.rank) ? 1 : -1);
