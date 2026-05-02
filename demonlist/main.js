@@ -123,7 +123,7 @@ async function collectData(url) {
 
 }
 
-function dateShort(x){
+function dateShort(x) {
     return x.toLocaleDateString("en-US", { year: 'numeric', month: '2-digit', day: '2-digit' })
 }
 
@@ -155,13 +155,13 @@ async function buildMain(timeMachine) {
         if (level.hardest == 1) {
             level.hardest = "⭐"
         }
-        if(level.rank == 1){
-            level.hardest = "👑"
-        }
-        if (level.hardest == 0) {
+        else{
             level.hardest = ""
         }
-        html += `<div class="level" id="${level.name}">
+        if (level.rank == 1) {
+            level.hardest = "👑"
+        }
+        html += `<div class="level" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/${level.id}.webp'">
                 <div class="rank">`
         if (level.aredl == 1) {
             html += `<img class="difficulty" src="demons/grandpa.png" alt="grandpa">`
@@ -217,8 +217,8 @@ async function buildMain(timeMachine) {
         document.getElementById("mainlist").innerHTML = html;
     })
     await buildOther()
-    thumbnails()
     buildMinor()
+    buildTop5()
     document.querySelectorAll(".level").forEach(level => {
         level.addEventListener("click", function () {
             if (this.classList.contains("active")) {
@@ -229,7 +229,7 @@ async function buildMain(timeMachine) {
                 this.classList.add("active");
             }
             document.getElementById("listexpand").textContent = "expand all"
-                allExpanded = false
+            allExpanded = false
         });
 
     })
@@ -247,48 +247,33 @@ function playtimeCalc(time) {
     return time
 }
 
-function thumbnails() {
-    levels.forEach(level => {
-        document.getElementById(level.name).style.backgroundImage = "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/" + level.id + ".webp')"
-    });
-    inprogress.forEach(level => {
-        document.getElementById(level.name).style.backgroundImage = "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/" + level.id + ".webp')"
-    });
-    upcoming.forEach(level => {
-        document.getElementById(level.name).style.backgroundImage = "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/" + level.id + ".webp')"
-    });
-    bucketlist.forEach(level => {
-        document.getElementById(level.name).style.backgroundImage = "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/" + level.id + ".webp')"
-    });
-}
-
 function buildMinor() {
     document.getElementById("totalstats").innerHTML =
         `
-                <a>extreme demons: ${levels.length}</a>
-                <a>total attempts: ${attemptsAll.reduce((total, a) => total + a, 0)} attempts</a>
-                <a>total playtime: ${playtimeCalc(playtimeAll.reduce((total, a) => total + a, 0))}</a>
+                <a>extreme demons: <span class="pink">${levels.length}</span></a>
+                <a>total attempts: <span class="pink">${attemptsAll.reduce((total, a) => total + a, 0)} attempts</span></a>
+                <a>total playtime: <span class="pink">${playtimeCalc(playtimeAll.reduce((total, a) => total + a, 0))}</span></a>
 
-                <a>average attempts: ${(attemptsAll.reduce((total, a) => total + a, 0)) / attemptsAll.length} attempts</a>
-                <a>average enjoyment: ${(enjoymentAll.reduce((total, a) => total + a, 0)) / enjoymentAll.length}/100</a>
-                <a>average max bpm: ${(bpmAll.reduce((total, a) => total + a, 0)) / bpmAll.length} BPM</a>
-                <a>average worst fail: ${(failAll.reduce((total, a) => total + a, 0)) / failAll.length}%</a>
-                <a>average playtime: ${playtimeCalc((playtimeAll.reduce((total, a) => total + a, 0)) / playtimeAll.length)}</a>
-                <a>average aredl verification time: ${(aredlverifAll.reduce((total, a) => total + a, 0)) / aredlverifAll.length} days</a>
+                <a>average attempts: <span class="pink">${(attemptsAll.reduce((total, a) => total + a, 0)) / attemptsAll.length} attempts</span></a>
+                <a>average enjoyment: <span class="pink">${(enjoymentAll.reduce((total, a) => total + a, 0)) / enjoymentAll.length}/100</span></a>
+                <a>average max bpm: <span class="pink">${(bpmAll.reduce((total, a) => total + a, 0)) / bpmAll.length} BPM</span></a>
+                <a>average worst fail: <span class="pink">${(failAll.reduce((total, a) => total + a, 0)) / failAll.length}%</span></a>
+                <a>average playtime: <span class="pink">${playtimeCalc((playtimeAll.reduce((total, a) => total + a, 0)) / playtimeAll.length)}</span></a>
+                <a>average aredl verification time: <span class="pink">${(aredlverifAll.reduce((total, a) => total + a, 0)) / aredlverifAll.length} days</span></a>
 
-                <a>least attempts: ${Math.min(...attemptsAll)} attempts</a>
-                <a>highest enjoyment: ${Math.max(...enjoymentAll)}/100</a>
-                <a>lowest max bpm: ${Math.min(...bpmAll)} BPM</a>
-                <a>lowest worst fail: ${Math.min(...failAll)}%</a>
-                <a>lowest playtime: ${playtimeCalc(Math.min(...playtimeAll))}</a>
-                <a>lowest aredl verification time: ${Math.min(...aredlverifAll)} days</a>
+                <a>least attempts: <span class="pink">${Math.min(...attemptsAll)} attempts</span> - ${getLevel(Math.min(...attemptsAll), "attempts")}</a>
+                <a>highest enjoyment: <span class="pink">${Math.max(...enjoymentAll)}/100</span> - ${getLevel(Math.max(...enjoymentAll), "enjoyment")}</a>
+                <a>lowest max bpm: <span class="pink">${Math.min(...bpmAll)} BPM</span> - ${getLevel(Math.min(...bpmAll), "bpm")}</a>
+                <a>lowest worst fail: <span class="pink">${Math.min(...failAll)}%</span> - ${getLevel(Math.min(...failAll), "worstDeath")}</a>
+                <a>lowest playtime: <span class="pink">${playtimeCalc(Math.min(...playtimeAll))}</span> - ${getLevel(Math.min(...playtimeAll), "playtimeSorting")}</a>
+                <a>lowest aredl verification time: <span class="pink">${Math.min(...aredlverifAll)} days</span> - ${getLevel(Math.min(...aredlverifAll), "timeAREDL")}</a>
 
-                <a>most attempts: ${Math.max(...attemptsAll)} attempts</a>
-                <a>lowest enjoyment: ${Math.min(...enjoymentAll)}/100</a>
-                <a>highest max bpm: ${Math.max(...bpmAll)} BPM</a>
-                <a>highest worst fail: ${Math.max(...failAll)}%</a>
-                <a>highest playtime: ${playtimeCalc(Math.max(...playtimeAll))}</a>
-                <a>highest aredl verification time: ${Math.max(...aredlverifAll)} days</a>
+                <a>most attempts: <span class="pink">${Math.max(...attemptsAll)} attempts</span> - ${getLevel(Math.max(...attemptsAll), "attempts")}</a>
+                <a>lowest enjoyment: <span class="pink">${Math.min(...enjoymentAll)}/100</span> - ${getLevel(Math.min(...enjoymentAll), "enjoyment")}</a>
+                <a>highest max bpm: <span class="pink">${Math.max(...bpmAll)} BPM</span> - ${getLevel(Math.max(...bpmAll), "bpm")}</a>
+                <a>highest worst fail: <span class="pink">${Math.max(...failAll)}%</span> - ${getLevel(Math.max(...failAll), "worstDeath")}</a>
+                <a>highest playtime: <span class="pink">${playtimeCalc(Math.max(...playtimeAll))}</span> - ${getLevel(Math.max(...playtimeAll), "playtimeSorting")}</a>
+                <a>highest aredl verification time: <span class="pink">${Math.max(...aredlverifAll)} days</span> - ${getLevel(Math.max(...aredlverifAll), "timeAREDL")}</a>
 `
     html = ""
     levels.sort((a, b) => (a.date < b.date) ? 1 : -1);
@@ -299,6 +284,15 @@ function buildMinor() {
     levels.sort((a, b) => (a.rank > b.rank) ? 1 : -1);
 }
 
+function getLevel(value, argument){
+    if(levels.filter((element) => element[argument] == value).length == 1){
+        return levels.filter((element) => element[argument] == value)[0].name
+    }
+    else{
+        return levels.filter((element) => element[argument] == value).length + " Levels"
+    }
+}
+
 async function buildOther() {
     if (inprogress.length == 0) await collectData(`https://opensheet.elk.sh/1QbdEQf6EbJJJ25ko4LnEoiStcZFyheAZoFozWy_59n4/progress?raw=true`)
     if (upcoming.length == 0) await collectData(`https://opensheet.elk.sh/1QbdEQf6EbJJJ25ko4LnEoiStcZFyheAZoFozWy_59n4/upcoming?raw=true`)
@@ -306,7 +300,7 @@ async function buildOther() {
     bucketlist.sort((a, b) => a.aredl < b.aredl ? 1 : -1)
     let html = ""
     inprogress.forEach(level => {
-        html += `<div class="level" id="${level.name}">
+        html += `<div class="level" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/${level.id}.webp'">
                     <div class="otherinfo">`
         if (tokimode) {
             html += `
@@ -327,11 +321,11 @@ async function buildOther() {
     html = ""
     storedDate = ""
     upcoming.forEach(level => {
-        if(level.time != storedDate){
-        html += `<h4>${level.time}</h4>`
+        if (level.time != storedDate) {
+            html += `<h4>${level.time}</h4>`
         }
         storedDate = level.time
-        html += `<div class="level" id="${level.name}">
+        html += `<div class="level" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/${level.id}.webp'">
                     <div class="otherinfo">`
         if (tokimode) {
             html += `
@@ -348,7 +342,7 @@ async function buildOther() {
     document.getElementById("upcoming").innerHTML = html
     html = ""
     bucketlist.forEach(level => {
-        html += `<div class="level" id="${level.name}">
+        html += `<div class="level" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/${level.id}.webp'">
                     <div class="otherinfo">`
         if (tokimode) {
             html += `
@@ -402,6 +396,21 @@ document.getElementById("sort").addEventListener("click", function () {
     buildMain();
 })
 
+document.getElementById("top5").addEventListener("click", function () {
+    if (document.getElementById("mainlist").style.display == "none") {
+        document.getElementById("mainlist").style.display = "flex"
+        document.getElementById("top5progression").style.display = "none"
+        allExpanded = false
+        expandAll()
+    }
+    else {
+        document.getElementById("mainlist").style.display = "none"
+        document.getElementById("top5progression").style.display = "flex"
+        allExpanded = false
+        expandAll()
+    }
+})
+
 document.getElementById("timetravel").addEventListener("click", function () {
     buildMain(new Date(document.getElementById("timemachinedate").value.toString()))
 })
@@ -422,16 +431,130 @@ document.getElementById("listexpand").addEventListener("click", function () {
 })
 
 function expandAll() {
-    if (allExpanded == true) {
-        document.querySelectorAll("#mainlist .level").forEach(level => {
-            level.classList.add("active");
-        });
-        document.getElementById("listexpand").textContent = "collapse all"
+    if (document.getElementById("mainlist").style.display != "none") {
+        if (allExpanded == true) {
+            document.querySelectorAll("#mainlist .level").forEach(level => {
+                level.classList.add("active");
+            });
+            document.getElementById("listexpand").textContent = "collapse all"
+        }
+        else {
+            document.querySelectorAll("#mainlist .level").forEach(level => {
+                level.classList.remove("active");
+            });
+            document.getElementById("listexpand").textContent = "expand all"
+        }
     }
-    else{
-        document.querySelectorAll("#mainlist .level").forEach(level => {
-            level.classList.remove("active");
-        });
-        document.getElementById("listexpand").textContent = "expand all"
+    else {
+        if (allExpanded == true) {
+            document.querySelectorAll("#top5progression .level").forEach(level => {
+                level.classList.add("active");
+            });
+            document.getElementById("listexpand").textContent = "collapse all"
+        }
+        else {
+            document.querySelectorAll("#top5progression .level").forEach(level => {
+                level.classList.remove("active");
+            });
+            document.getElementById("listexpand").textContent = "expand all"
+        }
     }
+}
+
+function buildTop5() {
+    dates = []
+    levels.sort((a, b) => (a.date < b.date) ? -1 : 1);
+    levels.forEach(level => {
+        dates.push(level.date)
+    })
+    levels.sort((a, b) => (a.rank > b.rank) ? 1 : -1);
+
+    allLists = []
+    allListsDates = []
+    previousList = []
+
+    dates.forEach(date => {
+        currentList = []
+        levels.forEach(level => {
+            if (level.date <= date) {
+                if (currentList.length < 5) {
+                    currentList.push(level)
+                }
+            }
+        })
+        if (JSON.stringify(previousList) != JSON.stringify(currentList) && currentList.length >= 5) {
+            allLists.push(currentList)
+            allListsDates.push(date)
+        }
+        previousList = currentList
+    })
+    html = ""
+    listCounter = 0
+    allLists.forEach(list => {
+        html += `<div class="top5old"><a class="dateTop5">${dateShort(allListsDates[listCounter])}</a>`
+        levelCounter = 1;
+        list.forEach(level => {
+            html += `<div class="level" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/${level.id}.webp'">
+                <div class="rank">`
+            if (level.aredl == 1) {
+                html += `<img class="difficulty" src="demons/grandpa.png" alt="grandpa">`
+            }
+            else if (level.aredl <= 25) {
+                html += `<img class="difficulty" src="demons/infinite.png" alt="infinite">`
+            }
+            else if (level.aredl <= 75) {
+                html += `<img class="difficulty" src="demons/mythical.png" alt="mythical">`
+            }
+            else if (level.aredl <= 150) {
+                html += `<img class="difficulty" src="demons/legendary.png" alt="legendary">`
+            }
+            else if (level.aredl <= 250) {
+                html += `<img class="difficulty" src="demons/ultimate.png" alt="ultimate">`
+            }
+            else if (level.aredl <= 500) {
+                html += `<img class="difficulty" src="demons/supreme.png" alt="supreme">`
+            }
+            else {
+                html += `<img class="difficulty" src="demons/extreme.png" alt="extreme">`
+            }
+            html += `<h3 class="placement">#${level.rank}</h3>
+                    <a class="aredl">AREDL #${level.aredl}</a>
+                    <a class="nlw">${level.nlw} Tier</a>
+                </div>
+                <div class="info">
+                    <div class="levelinfo">`
+            if (tokimode) {
+                html += `<h3 class="levelname toki">${level.tokiname} tan jan ${level.tokicreator}${level.hardest}</h3>`
+            }
+            else {
+                html += `<h3 class="levelname">${level.name} by ${level.creator} ${level.hardest}</h3>`
+            }
+            html += `</div>
+                    <div class="stats">
+                        <div class="generalstats">
+                            <div>Attempts: ${level.attempts}</div>
+                            <div>Enjoyment: ${level.enjoyment}/100</div>
+                            <div>Max BPM: ${level.bpm} BPM</div>
+                            <div>Worst Death: ${level.worstDeath}%</div>
+                            <div>Hardest Part: ${level.hardestPart}%</div>
+                        </div>
+                        <div class="timestats">
+                            <div class="playtime">Level Playtime: ${level.playtime}</div>
+                            <div class="gdtime">Total GD Playtime: ${level.timeGD}h</div>
+                            <div class="aredltime">AREDL Verification Time: ${level.timeAREDL} days</div>
+                            <div class="date">Completion Date: ${dateShort(level.date)}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>`
+            levelCounter++
+        })
+
+
+        html += `<marquee direction="right" loop="infinite"> >>> Scroll to the right to see more >>> Scroll to the right to see more >>> Scroll to the right to see more >>> Scroll to the right to see more >>> Scroll to the right to see more >>> </marquee>
+        </div>`
+        listCounter++
+    })
+
+    document.getElementById("top5progression").innerHTML = html
 }

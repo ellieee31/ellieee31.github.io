@@ -30,16 +30,16 @@ main {
     text-shadow: 5px 5px 5px #000000;
 }
 
-a{
+a {
     text-decoration: none;
     color: white;
 }
 
-a:any-link{
+a:any-link {
     color: #ffa0dc;
 }
 
-#hardestinfo{
+#hardestinfo {
     margin: .5rem;
 }
 
@@ -106,6 +106,7 @@ nav button:disabled {
 }
 
 #lists {
+    display: flex;
     width: 95rem;
     flex-direction: row;
     justify-content: space-between;
@@ -121,11 +122,15 @@ nav button:disabled {
     width: 10rem;
 }
 
+#minor{
+    font-size: 16px;
+}
+
 #totalstats a:nth-child(6n-3) {
     margin-bottom: 1rem;
 }
 
-#mainlist {
+#mainlist{
     width: 40rem;
     align-items: center;
     flex-direction: column;
@@ -133,7 +138,8 @@ nav button:disabled {
     border-right: 1px lightgray solid;
 }
 
-#mainlist .level {
+#mainlist .level,
+#top5progression .level {
     background-size: cover;
     background-position: center;
     margin: .5rem;
@@ -153,7 +159,8 @@ nav button:disabled {
     user-select: none;
 }
 
-#mainlist .level.active {
+#mainlist .level.active,
+#top5progression .level.active {
     height: 12rem;
 
     .info {
@@ -178,7 +185,8 @@ nav button:disabled {
 }
 
 #mainlist .level:hover,
-#inprogress .level:hover {
+#inprogress .level:hover,
+#top5progression .level:hover {
     cursor: pointer;
 }
 
@@ -221,7 +229,8 @@ nav button:disabled {
 }
 
 .placement,
-#mainlist .levelname {
+#mainlist .levelname,
+#top5progression .levelname {
     margin: 0;
     font-size: 1.5rem;
 }
@@ -311,7 +320,7 @@ nav button:disabled {
     align-items: center;
 }
 
-footer{
+footer {
     margin: 1rem;
 }
 
@@ -344,6 +353,7 @@ footer{
 
     #minor,
     #mainlist,
+    #top5progression,
     #other {
         display: flexbox;
         width: 100vw;
@@ -356,7 +366,8 @@ footer{
         order: 2;
     }
 
-    #mainlist {
+    #mainlist,
+    #top5progression {
         border: none;
     }
 }
@@ -366,7 +377,8 @@ footer{
         font-size: 12px;
     }
 
-    #mainlist .level {
+    #mainlist .level,
+    #top5progression .level {
         margin: .5rem;
         width: 35rem;
     }
@@ -392,20 +404,21 @@ footer{
 
 @media (max-width: 450px) {
 
-    html{
+    html {
         font-size: 8px;
     }
 
-    nav{
+    nav {
         width: 100%;
     }
 
-    nav button{
+    nav button {
         width: 20vw;
         font-size: 1rem;
     }
 
-    #mainlist .level {
+    #mainlist .level,
+    #top5progression .level {
         margin: .5rem;
         width: 90vw;
     }
@@ -428,7 +441,7 @@ footer{
         height: 4.5rem;
     }
 
-    #changelog{
+    #changelog {
         width: 90vw;
     }
 }
@@ -470,6 +483,30 @@ footer{
     margin-bottom: .5rem;
 }
 
-#upcoming h4{
+#upcoming h4 {
     margin: .5rem;
+}
+
+#top5progression {
+    display: none;
+    flex-direction: row;
+    width: 40rem;
+    height: 90rem;
+    border-left: 1px lightgray solid;
+    border-right: 1px lightgray solid;
+    overflow-x: scroll;
+}
+
+.dateTop5 {
+    text-align: center;
+}
+
+.top5old {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+.pink{
+    color: #ffa0dc;
 }
