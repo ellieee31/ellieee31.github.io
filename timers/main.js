@@ -4,10 +4,11 @@ let maPonaDate = new Date(2025, 3, 6)
 let acuDate = new Date(2022, 7, 22)
 let voiceDate = new Date(2024, 11, 20)
 let artDate = new Date(2025, 0, 3)
-let fnafDate = new Date (2025, 1, 9)
+let genberalDate = new Date (2025, 8, 13)
+let fnafDate = new Date (2026, 1, 9)
 
-let ellieDates = [maPonaDate, acuDate, voiceDate, artDate, fnafDate]
-let ellieDescriptions = [`of ellie not joining ma pona`, `of ellie not having beaten Acu`, `of ellie not voice training`, `of ellie not learning how to draw`, `of ellie not finishing her fnaf fangame`]
+let ellieDates = [maPonaDate, acuDate, voiceDate, artDate, genberalDate, fnafDate]
+let ellieDescriptions = [`of ellie not joining ma pona`, `of ellie not having beaten Acu`, `of ellie not voice training`, `of ellie not learning how to draw`, ` of ellie not being able to see #genberal`, `of ellie not finishing her fnaf fangame`]
 
 let duolingoDate = new Date(2025, 2, 27)
 let colonistDate = new Date(2025, 11, 20)
