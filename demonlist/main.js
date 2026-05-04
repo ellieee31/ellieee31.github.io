@@ -191,7 +191,7 @@ async function buildMain(timeMachine) {
                 <div class="info">
                     <div class="levelinfo">`
         if (tokimode) {
-            html += `<h3 class="levelname toki">${level.tokiname} tan jan ${level.tokicreator}${level.hardest}</h3>`
+            html += `<h3 class="levelname toki">${level.tokiname} tan ${level.tokicreator}${level.hardest}</h3>`
         }
         else {
             html += `<h3 class="levelname">${level.name} by ${level.creator} ${level.hardest}</h3>`
@@ -305,7 +305,7 @@ async function buildOther() {
         if (tokimode) {
             html += `
                 <a class="aredl tokiaredl">#${level.aredl} -&nbsp;</a>
-                <a class="levelname toki">${level.tokiname} tan jan ${level.tokicreator}</a>`
+                <a class="levelname toki">${level.tokiname} tan ${level.tokicreator}</a>`
         }
         else {
             html += `
@@ -330,7 +330,7 @@ async function buildOther() {
         if (tokimode) {
             html += `
              <a class="aredl tokiaredl">#${level.aredl} -&nbsp;</a>
-             <a class="levelname toki">${level.tokiname} tan jan ${level.tokicreator}</a>`
+             <a class="levelname toki">${level.tokiname} tan ${level.tokicreator}</a>`
         }
         else {
             html += `
@@ -347,7 +347,7 @@ async function buildOther() {
         if (tokimode) {
             html += `
              <a class="aredl tokiaredl">#${level.aredl} -&nbsp;</a>
-             <a class="levelname toki">${level.tokiname} tan jan ${level.tokicreator}</a>`
+             <a class="levelname toki">${level.tokiname} tan ${level.tokicreator}</a>`
         }
         else {
             html += `
@@ -524,7 +524,7 @@ function buildTop5() {
                 <div class="info">
                     <div class="levelinfo">`
             if (tokimode) {
-                html += `<h3 class="levelname toki">${level.tokiname} tan jan ${level.tokicreator}${level.hardest}</h3>`
+                html += `<h3 class="levelname toki">${level.tokiname} tan ${level.tokicreator}${level.hardest}</h3>`
             }
             else {
                 html += `<h3 class="levelname">${level.name} by ${level.creator} ${level.hardest}</h3>`
