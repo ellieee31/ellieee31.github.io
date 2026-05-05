@@ -332,6 +332,11 @@ footer {
         align-items: center;
     }
 
+    #top5{
+        pointer-events: none;
+        background-color: #000000;
+    }
+
     nav {
         display: flex;
         width: 100vw;
@@ -453,6 +458,9 @@ footer {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    background-image: linear-gradient(#2c1142, #150620);
+    color: white;
+    text-shadow: 5px 5px 5px #000000;
 }
 
 #loader img {
