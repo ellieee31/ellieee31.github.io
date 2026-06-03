@@ -27,7 +27,7 @@ main {
     align-items: center;
     background-image: linear-gradient(#2c1142, #150620);
     color: white;
-    text-shadow: 5px 5px 5px #000000;
+    text-shadow: 2px 2px #000000;
 }
 
 a {
@@ -126,11 +126,12 @@ nav button:disabled {
     font-size: 16px;
 }
 
-#totalstats a:nth-child(6n-3) {
+#totalstats a:nth-child(5n-2) {
     margin-bottom: 1rem;
 }
 
-#mainlist{
+
+#mainlist, #packs{
     width: 40rem;
     align-items: center;
     flex-direction: column;
@@ -169,7 +170,7 @@ nav button:disabled {
     }
 
     .timestats {
-        margin-top: 3rem;
+        margin-top: 4rem;
     }
 
     font-size: 0.9rem;
@@ -181,6 +182,10 @@ nav button:disabled {
         opacity: 1;
         display: block;
         transition-delay: 2s;
+    }
+
+    .links{
+        display: flex;
     }
 }
 
@@ -195,7 +200,7 @@ nav button:disabled {
     padding-left: .5rem;
 }
 
-#other .level {
+#other .level{
     margin: .5rem;
     padding: .75rem;
     width: 22rem;
@@ -209,6 +214,23 @@ nav button:disabled {
 
     .otherruns {
         display: none;
+    }
+}
+
+#packs .level{
+    margin: .5rem;
+    padding: .75rem;
+    width: 35rem;
+    height: 2.5rem;
+    background-size: cover;
+    background-position: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-direction: column;
+    user-select: none;
+
+    .tokiaredl {
+        width: 45%;
     }
 }
 
@@ -302,7 +324,7 @@ nav button:disabled {
 }
 
 .tokiaredl {
-    width: 80%;
+    width: 70%;
     display: flex;
 }
 
@@ -310,7 +332,6 @@ nav button:disabled {
     color: white;
     border: white 2px solid;
     box-shadow: 5px 5px 5px #000000;
-    ;
     border-radius: .5rem;
 }
 
@@ -404,6 +425,9 @@ footer {
 
     #inprogress .level.active {
         height: 4.5rem;
+    }
+    #other .tokiaredl{
+        width: 80%;
     }
 }
 
@@ -505,6 +529,10 @@ footer {
     overflow-x: scroll;
 }
 
+#packs{
+    display: none;
+}
+
 .dateTop5 {
     text-align: center;
 }
@@ -517,4 +545,59 @@ footer {
 
 .pink{
     color: #ffa0dc;
+}
+
+.links{
+    display: none;
+    margin-left: auto;
+    align-items: center;
+}
+
+.links img{
+    width: 2rem;
+    padding: 0rem .5rem;
+}
+
+.youtubeLink:hover{
+    filter: brightness(0) saturate(100%) invert(77%) sepia(84%) saturate(441%) hue-rotate(281deg) brightness(100%) contrast(102%);
+}
+
+.aredlLink:hover{
+    filter: brightness(0) saturate(100%) invert(77%) sepia(84%) saturate(441%) hue-rotate(281deg) brightness(100%) contrast(102%);
+}
+
+img{
+    user-select: none;
+}
+
+#mainlist .level:nth-child(n+2){
+    border-color: gold;
+}
+
+#mainlist .level:nth-child(n+3){
+    border-color: silver
+}
+
+#mainlist .level:nth-child(n+4){
+    border-color: indianred;
+}
+
+#mainlist .level:nth-child(n+5):nth-child(-n+6){
+    border-color: lightskyblue;
+}
+
+#mainlist .level:nth-child(n+7):nth-child(-n+11){
+    border-color: #8989F9
+}
+
+#mainlist .level:nth-child(n+12):nth-child(-n+16){
+    border-color: plum
+}
+
+#mainlist .level:nth-child(n+17):nth-child(-n+21){
+    border-color: pink
+}
+
+#mainlist .level:nth-child(n+22):nth-child(-n+26){
+    border-color: #eb8f70
 }
