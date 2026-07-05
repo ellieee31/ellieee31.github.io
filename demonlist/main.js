@@ -161,7 +161,7 @@ async function collectData(url) {
                     let packIndex = i;
                     let packtokiname = "";
                     let packtokicreator = "";
-                    let packtungcreator = "";
+                    let packtungname = "";
                     allLevels.forEach((element) => {
                         if (element.id == level) {
                             packtokiname = element.tokiname;
@@ -179,7 +179,7 @@ async function collectData(url) {
                             aredl: data.aredl_tier,
                             tokiname: packtokiname,
                             tokicreator: packtokicreator,
-                            tungname: packtungcreator,
+                            tungname: packtungname,
                         };
                     });
                 });
@@ -441,7 +441,7 @@ async function buildOther() {
         } else if (tungmode) {
             html += `
                 <a class="aredl">#${level.aredl} -&nbsp;</a>
-                <a class="levelname">${level.tungname} tan ${level.creator}</a>`;
+                <a class="levelname">${level.tungname} by ${level.creator}</a>`;
         } else {
             html += `
              <a class="aredl">#${level.aredl} -&nbsp;</a>
@@ -469,7 +469,7 @@ async function buildOther() {
         } else if (tungmode) {
             html += `
                 <a class="aredl">#${level.aredl} -&nbsp;</a>
-                <a class="levelname">${level.tungname} tan ${level.creator}</a>`;
+                <a class="levelname">${level.tungname} by ${level.creator}</a>`;
         } else {
             html += `
              <a class="aredl">#${level.aredl} -&nbsp;</a>
@@ -489,7 +489,7 @@ async function buildOther() {
         } else if (tungmode) {
             html += `
                 <a class="aredl">#${level.aredl} -&nbsp;</a>
-                <a class="levelname">${level.tungname} tan ${level.creator}</a>`;
+                <a class="levelname">${level.tungname} by ${level.creator}</a>`;
         } else {
             html += `
              <a class="aredl">#${level.aredl} -&nbsp;</a>
@@ -752,9 +752,9 @@ function buildPacks() {
                          <a class="aredl tokiaredl">#${level.aredl} -&nbsp;</a>
                          <a class="levelname toki">${level.tokiname} tan ${level.tokicreator}</a>`;
             } else if (tungmode) {
-                html += `
+                levelSection += `
                 <a class="aredl">#${level.aredl} -&nbsp;</a>
-                <a class="levelname">${level.tungname} tan ${level.creator}</a>`;
+                <a class="levelname">${level.tungname} by ${level.creator}</a>`;
             } else {
                 levelSection += `
                          <a class="aredl">#${level.aredl} -&nbsp;</a>
