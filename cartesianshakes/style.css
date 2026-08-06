@@ -43,3 +43,7 @@ a:any-link:hover {
     justify-content: center;
     align-items: center;
 }
+
+#gamemodeSelect{
+    display: block;
+}

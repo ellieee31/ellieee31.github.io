@@ -34,41 +34,79 @@ const LevelCoords = [
 
 let stored = "";
 let levelID = 99;
-let levelText = ""
-let guessCheck = ""
-let totalLevels = 0
-let correctLevels = 0
+let levelText = "";
+let guessCheck = "";
+let totalLevels = 0;
+let correctLevels = 0;
+let time = "";
+let startTime = 0;
+let gamemode = "";
+let bag = [];
+let gameOver = false;
+
 function start() {
     document.getElementById("startButton").style.display = "none";
+    document.getElementById("gamemodeSelect").style.display = "none";
     document.getElementById("previousStats").style.display = "flex";
 
+    gamemode = document.querySelector('input[name="gamemode"]:checked').value;
+
+    if (gamemode == "bag") {
+        for (i = 0; i <= 29; i++) {
+            bag.push(i);
+        }
+        for (i = 29; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [bag[i], bag[j]] = [bag[j], bag[i]];
+        }
+    }
+
+    startTime = Date.now();
+    let timer = setInterval(updateTime, 1);
     newLevel();
 
     addEventListener("keydown", function (e) {
-        if (e.key == "Backspace") {
-            stored = "";
-        }
-        stored += e.key.replace(/\D/g, "");
-        if (stored.length == 2) {
-            if (stored == levelID) {
-                guessCheck = "✅"
-                correctLevels++
-            } else {
-                guessCheck = "❌"
+        if (!gameOver) {
+            if (e.key == "Backspace") {
+                stored = "";
             }
-            totalLevels++
-            document.getElementById("previousLevel").textContent = `Previous Level: Level ${levelID} - ${levelText}`
-            document.getElementById("previousGuess").textContent = `Previous Guess: Level ${stored} ${guessCheck}`
-            document.getElementById("winRatio").textContent = `Win Ratio: ${correctLevels}/${totalLevels} (${Math.floor((correctLevels/totalLevels)*10000)/100}%)`
-            stored = "";
-            newLevel();  
+            stored += e.key.replace(/\D/g, "");
+            if (stored.length == 2) {
+                if (stored == levelID) {
+                    guessCheck = "✅";
+                    correctLevels++;
+                } else {
+                    guessCheck = "❌";
+                }
+                totalLevels++;
+                document.getElementById("previousLevel").textContent =
+                    `Previous Level: Level ${levelID} - ${levelText}`;
+                document.getElementById("previousGuess").textContent =
+                    `Previous Guess: Level ${stored} ${guessCheck}`;
+                document.getElementById("winRatio").textContent =
+                    `Win Ratio: ${correctLevels}/${totalLevels} (${Math.floor((correctLevels / totalLevels) * 10000) / 100}%)`;
+                stored = "";
+                if (gamemode == "bag" && bag.length == 0) {
+                    gameOver = true;
+                    clearInterval(timer)
+                    document.getElementById("level").style.display = "none"
+                } else {
+                    newLevel();
+                }
+            }
+            document.getElementById("input").textContent = stored;
         }
-        document.getElementById("input").textContent = stored;
     });
 }
 
 function newLevel() {
-    levelID = Math.floor(Math.random() * 30);
+    if (gamemode == "bag") {
+        levelID = bag.shift();
+    }
+
+    if (gamemode == "endless") {
+        levelID = Math.floor(Math.random() * 30);
+    }
 
     levelText = "(0, 0)";
     for (i = 0; i <= 7; i++) {
@@ -82,4 +120,9 @@ function newLevel() {
         levelID = "0" + levelID;
     }
     document.getElementById("level").textContent = levelText;
+}
+
+function updateTime() {
+    time = `Time: ${(Date.now() - startTime) / 1000}s`;
+    document.getElementById("time").textContent = time;
 }

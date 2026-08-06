@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>cartesianshakes</title>
+        <title>Document</title>
         <script src="main.js"></script>
         <link rel="stylesheet" href="style.css" />
     </head>
@@ -13,10 +13,17 @@
                 <a id="previousLevel">Previous Level: </a>
                 <a id="previousGuess">Previous Guess: </a>
                 <a id="winRatio">Win Ratio: </a>
+                <a id="time">Time: </a>
             </div>
             <a id="input"></a>
             <div id="center">
                 <a id="level"></a>
+                <form id="gamemodeSelect">
+                    <input type="radio" name="gamemode" value="bag" checked />
+                    <label for="bag">bag</label><br>
+                    <input type="radio" name="gamemode" value="endless" />
+                    <label for="endless">endless</label>
+                </form>
                 <button onclick="start()" id="startButton">start</button>
             </div>
         </main>
