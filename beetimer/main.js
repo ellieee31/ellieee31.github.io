@@ -85,7 +85,7 @@ async function event() {
             eventMessage = "Swapped minutes and seconds"
             break;
         case (rng <= 16):
-            Math.round(secondsLeft/50)*50
+            Math.round(secondsLeft/60)*60
             eventMessage = "Rounded time to the nearest minute"
             break;
         case (rng <= 17):
