@@ -62,7 +62,7 @@ async function event() {
             break;
         case (rng <= 12):
             sleep(secondsPerSecond * 4)
-            eventMessage = "Froze the timer for one second"
+            eventMessage = "Froze the timer for five seconds"
             break;
         case (rng <= 13):
             secondsLeft *= 2;
