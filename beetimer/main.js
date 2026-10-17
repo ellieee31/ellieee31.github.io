@@ -27,8 +27,8 @@ async function mainLoop() {
     if (hours < 10) hours = "0" + hours;
     if (minutes < 10) minutes = "0" + minutes;
     if (seconds < 10) seconds = "0" + seconds;
-    if (milliseconds < 10) seconds = "000" + milliseconds;
-    if (milliseconds < 100) seconds = "00" + milliseconds;
+    if (milliseconds < 10) milliseconds = "000" + milliseconds;
+    if (milliseconds < 100) milliseconds = "00" + milliseconds;
     
     document.getElementById("timer").textContent = `00:00:00`;
     document.getElementById("info").textContent = `Previous Event: ${eventMessage} | 1s = ${secondsPerSecond}s | Final Time: ${hours}:${minutes}:${seconds}.${milliseconds}`
