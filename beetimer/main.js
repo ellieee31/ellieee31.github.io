@@ -61,7 +61,7 @@ async function event() {
             eventMessage = "Subtracted a minute from the timer"
             break;
         case (rng <= 12):
-            sleep(secondsPerSecond * 4)
+            await sleep(secondsPerSecond * 4)
             eventMessage = "Froze the timer for five seconds"
             break;
         case (rng <= 13):
