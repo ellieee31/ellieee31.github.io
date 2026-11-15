@@ -8,21 +8,25 @@ let mainlevels = [],
     bucketlist = [],
     packs = [],
     allLevels = [],
-    levelsNames = [];
+    levelsNames = [],
+    unrated = [];
+
 let attemptsAll = [],
     enjoymentAll = [],
     failAll = [],
     playtimeAll = [],
     bpmAll = [];
+
 let blocked = [];
+
 let tokimode = false,
     allExpanded = false,
     tungmode = false;
 
-async function getAredlData(levelID) {
+async function getAredlData(levelid) {
     try {
         const response = await fetch(
-            "https://api.aredl.net/v2/api/aredl/levels/" + levelID,
+            "https://api.aredl.net/v2/api/aredl/levels/" + levelid,
         );
         if (!response.ok) {
             throw new Error("Level doesn't exist");
@@ -68,22 +72,51 @@ async function collectData(url) {
     try {
         const res = await fetch(url);
         const spreadsheetResults = await res.json();
+        let aredlPromises = new Object();
         if (!url.includes("packs")) {
-            const aredlPromises = spreadsheetResults.map(function (level) {
-                return getAredlData(level.ID);
-            });
-            const aredlResults = await Promise.all(aredlPromises);
+            if (!url.includes("unrated")) {
+                aredlPromises = spreadsheetResults.map(function (level) {
+                    if (!level.unrated) {
+                        return getAredlData(level.id);
+                    }
+                });
+            }
+            const aredlResults = await Promise.all(
+                Object.values(aredlPromises),
+            );
             for (i = 0; i < spreadsheetResults.length; i++) {
                 spreadsheetData = spreadsheetResults[i];
                 aredlData = aredlResults[i];
+                levelInfo = [];
+                if (url.includes("unrated")) {
+                    unrated.push({
+                        id: spreadsheetData.id,
+                        name: spreadsheetData.name,
+                        creator: spreadsheetData.creator,
+                    });
+                } else {
+                    if (!spreadsheetData.unrated) {
+                        levelInfo.push(
+                            aredlData.name,
+                            aredlData.creator,
+                            aredlData.aredl_tier,
+                        );
+                    } else {
+                        unrated.forEach((level) => {
+                            if (spreadsheetData.id == level.id) {
+                                levelInfo.push(level.name, level.creator, "-");
+                            }
+                        });
+                    }
+                }
 
-                if (url.includes("demonlist")) {
+                if (url.includes("demonlist2")) {
                     mainlevels.push({
-                        name: aredlData.name,
-                        creator: aredlData.creator,
-                        id: spreadsheetData.ID,
+                        name: levelInfo[0],
+                        creator: levelInfo[1],
+                        aredl: levelInfo[2],
+                        id: spreadsheetData.id,
                         rank: spreadsheetData.rank,
-                        aredl: aredlData.aredl_tier,
                         nlw: spreadsheetData.nlwTier,
                         hardest: spreadsheetData.hardest,
                         attempts: spreadsheetData.attempts,
@@ -101,7 +134,7 @@ async function collectData(url) {
                         youtube: spreadsheetData.youtube,
                         changelog: spreadsheetData.changelog,
                     });
-                    levelsNames.push(aredlData.name);
+                    levelsNames.push(levelInfo[0]);
                     time = mainlevels[i].playtimeSorting * 86400;
                     mainlevels[i].playtime = playtimeCalc(
                         mainlevels[i].playtime,
@@ -112,10 +145,10 @@ async function collectData(url) {
                     );
                 } else if (url.includes("progress")) {
                     inprogress.push({
-                        name: aredlData.name,
-                        creator: aredlData.creator,
-                        id: spreadsheetData.ID,
-                        aredl: aredlData.aredl_tier,
+                        name: levelInfo[0],
+                        creator: levelInfo[1],
+                        aredl: levelInfo[2],
+                        id: spreadsheetData.id,
                         nlw: spreadsheetData.nlwTier,
                         runs: spreadsheetData.runs,
                         estimatedRank: spreadsheetData.estimatedRank,
@@ -125,10 +158,10 @@ async function collectData(url) {
                     });
                 } else if (url.includes("upcoming")) {
                     upcoming.push({
-                        name: aredlData.name,
-                        creator: aredlData.creator,
-                        id: spreadsheetData.ID,
-                        aredl: aredlData.aredl_tier,
+                        name: levelInfo[0],
+                        creator: levelInfo[1],
+                        aredl: levelInfo[2],
+                        id: spreadsheetData.id,
                         nlw: spreadsheetData.nlwTier,
                         time: spreadsheetData.time,
                         tokiname: spreadsheetData.tpName,
@@ -137,10 +170,10 @@ async function collectData(url) {
                     });
                 } else if (url.includes("bucketlist")) {
                     bucketlist.push({
-                        name: aredlData.name,
-                        creator: aredlData.creator,
-                        id: spreadsheetData.ID,
-                        aredl: aredlData.aredl_tier,
+                        name: levelInfo[0],
+                        creator: levelInfo[1],
+                        aredl: levelInfo[2],
+                        id: spreadsheetData.id,
                         nlw: spreadsheetData.nlwTier,
                         tokiname: spreadsheetData.tpName,
                         tokicreator: spreadsheetData.tpCreator,
@@ -204,8 +237,11 @@ async function buildMain(timeMachine) {
     let html = `<a id='hardestinfo'>👑 - current hardest | ⭐ - former hardest</a>`;
     if (mainlevels.length == 0)
         await collectData(
-            `https://opensheet.elk.sh/1QbdEQf6EbJJJ25ko4LnEoiStcZFyheAZoFozWy_59n4/demonlist?raw=true`,
+            `https://opensheet.elk.sh/1QbdEQf6EbJJJ25ko4LnEoiStcZFyheAZoFozWy_59n4/unrated?raw=true`,
         );
+    await collectData(
+        `https://opensheet.elk.sh/1QbdEQf6EbJJJ25ko4LnEoiStcZFyheAZoFozWy_59n4/demonlist2?raw=true`,
+    );
     attemptsAll = mainlevels.map((a) => a.attempts);
     enjoymentAll = mainlevels.map((a) => a.enjoyment);
     failAll = mainlevels.map((a) => a.worstDeath);
@@ -232,7 +268,7 @@ async function buildMain(timeMachine) {
         if (level.rank == 1) {
             level.hardest = "👑";
         }
-        html += `<div class="level" id="${level.name}" style="background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/${level.id}.webp')">
+        html += `<div class="level" id="${level.name}" style="background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('https://levelthumbs.prevter.me/thumbnail/${level.id}')">
                 <div class="rank">`;
         if (level.aredl == 1) {
             html += `<img class="difficulty" src="demons/grandpa.png" alt="grandpa">`;
@@ -340,7 +376,6 @@ async function buildMain(timeMachine) {
             });
         });
     blocked.forEach((blockedLevel) => {
-        console.log(blockedLevel);
         document.getElementById(blockedLevel).style.display = "none";
     });
     document.getElementById("container").style.display = "flex";
@@ -432,7 +467,7 @@ async function buildOther() {
     bucketlist.sort((a, b) => (a.aredl < b.aredl ? 1 : -1));
     let html = "";
     inprogress.forEach((level) => {
-        html += `<div class="level" style="background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/${level.id}.webp')">
+        html += `<div class="level" style="background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('https://levelthumbs.prevter.me/thumbnail/${level.id}')">
                     <div class="otherinfo">`;
         if (tokimode) {
             html += `
@@ -460,7 +495,7 @@ async function buildOther() {
             html += `<h4>${level.time}</h4>`;
         }
         storedDate = level.time;
-        html += `<div class="level" style="background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/${level.id}.webp')">
+        html += `<div class="level" style="background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('https://levelthumbs.prevter.me/thumbnail/${level.id}')">
                     <div class="otherinfo">`;
         if (tokimode) {
             html += `
@@ -480,7 +515,7 @@ async function buildOther() {
     document.getElementById("upcoming").innerHTML = html;
     html = "";
     bucketlist.forEach((level) => {
-        html += `<div class="level" style="background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/${level.id}.webp')">
+        html += `<div class="level" style="background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('https://levelthumbs.prevter.me/thumbnail/${level.id}')">
                     <div class="otherinfo">`;
         if (tokimode) {
             html += `
@@ -674,7 +709,7 @@ function buildTop5() {
         html += `<div class="top5old"><a class="dateTop5">${dateShort(allListsDates[listCounter])}</a>`;
         levelCounter = 1;
         list.forEach((level) => {
-            html += `<div class="level" style="background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/${level.id}.webp')">
+            html += `<div class="level" style="background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('https://levelthumbs.prevter.me/thumbnail/${level.id}')">
                 <div class="rank">`;
             if (level.aredl == 1) {
                 html += `<img class="difficulty" src="demons/grandpa.png" alt="grandpa">`;
@@ -741,10 +776,10 @@ function buildPacks() {
         pack.levels.sort((a, b) => (a.aredl > b.aredl ? 1 : -1));
         pack.levels.forEach((level) => {
             if (levelsNames.includes(level.name)) {
-                levelSection += `<div class="level" style="background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/${level.id}.webp')">`;
+                levelSection += `<div class="level" style="background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('https://levelthumbs.prevter.me/thumbnail/${level.id}')">`;
                 completionCounter++;
             } else {
-                levelSection += `<div class="level" style="background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('https://raw.githubusercontent.com/All-Rated-Extreme-Demon-List/Thumbnails/main/levels/full/${level.id}.webp'); filter: grayscale(100%)">`;
+                levelSection += `<div class="level" style="background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('https://levelthumbs.prevter.me/thumbnail/${level.id}'); filter: grayscale(100%)">`;
             }
             levelSection += `<div class="otherinfo">`;
             if (tokimode) {
