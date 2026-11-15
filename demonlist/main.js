@@ -110,7 +110,7 @@ async function collectData(url) {
                     }
                 }
 
-                if (url.includes("demonlist2")) {
+                if (url.includes("demonlist")) {
                     mainlevels.push({
                         name: levelInfo[0],
                         creator: levelInfo[1],
@@ -240,7 +240,7 @@ async function buildMain(timeMachine) {
             `https://opensheet.elk.sh/1QbdEQf6EbJJJ25ko4LnEoiStcZFyheAZoFozWy_59n4/unrated?raw=true`,
         );
     await collectData(
-        `https://opensheet.elk.sh/1QbdEQf6EbJJJ25ko4LnEoiStcZFyheAZoFozWy_59n4/demonlist2?raw=true`,
+        `https://opensheet.elk.sh/1QbdEQf6EbJJJ25ko4LnEoiStcZFyheAZoFozWy_59n4/demonlist?raw=true`,
     );
     attemptsAll = mainlevels.map((a) => a.attempts);
     enjoymentAll = mainlevels.map((a) => a.enjoyment);
